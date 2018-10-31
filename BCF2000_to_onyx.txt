@@ -101,14 +101,13 @@ match("/Mx/fader/%i", oscstr) ?
 )
 
 @midimsg
-printf("%d, %d, %d\n", msg1, msg2, msg3);
+//printf("%d, %d, %d\n", msg1, msg2, msg3);
 
 
 //Faders
 msg1 == 0xB0? (
 	osc_fader_number = midi_channel_to_fader_num[msg2] * 10 + 4203;
 	fader_value = mapf(msg3, 0, 127, 0, 255);
-//	printf("fader: %d\n", osc_fader_number);
 	oscsend(osc_out, "i/Mx/fader/%d", fader_value, osc_fader_number);
 );
 
