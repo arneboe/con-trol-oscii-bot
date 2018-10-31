@@ -1,5 +1,5 @@
 @input osc_in OSC "192.168.44.44:9000"
-@output osc_out OSC "192.168.44.44:8000"
+@output osc_out OSC "192.168.44.44:8000" 1024 0
 @input midi_in MIDI "BCF2000"
 @output midi_out MIDI "BCF2000"
 
@@ -7,7 +7,7 @@
 fader_midi_control_numbers = 1024;
 downdown_button_midi_control_numbers = 4000;
 down_button_midi_control_numbers = 6000;
-
+effect_belt_midi_control_numbers =8000;
 
 /////////////////////////////
 //////BEGIN CONFIGURATION////
@@ -48,6 +48,11 @@ down_button_midi_control_numbers[7] = 24;
 next_button_midi_control_number = 25;
 prev_button_midi_control_number = 26;
 
+effect_belt_midi_control_numbers[0] = 27;
+effect_belt_midi_control_numbers[1] = 28;
+effect_belt_midi_control_numbers[2] = 29;
+effect_belt_midi_control_numbers[3] = 30;
+
 
 /////////////////////////////
 //////END CONFIGURATION//////
@@ -56,6 +61,15 @@ prev_button_midi_control_number = 26;
 midi_channel_to_fader_num = 2000;
 midi_channel_to_downdown_button_num = 5000;
 midi_channel_to_down_button_num = 7000;
+midi_channel_to_effect_belt_num = 9000;
+
+while(
+	midi_channel_to_effect_belt_num[effect_belt_midi_control_numbers[i]] = i;
+	i = i + 1;
+	i < 4;
+   );
+
+
 i = 0;
 while(
 	midi_channel_to_fader_num[fader_midi_control_numbers[i]] = i;
@@ -136,4 +150,14 @@ msg1 == 0xB3? (
 			oscsend(osc_out, "i/Mx/scroll/4110/up", 0);
 		)
 	);
+);
+
+//Faders
+msg1 == 0xB4? (
+	osc_fader_number = midi_channel_to_effect_belt_num[msg2] * 10 + 6212;
+	val = 0;
+	msg3 > 0 ? (
+		val = 1;
+	);
+	oscsend(osc_out, "i/Mx/belt/%d", val, osc_fader_number);
 );
