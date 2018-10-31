@@ -1,0 +1,18 @@
+//@input osc_in OSC "192.168.44.44:9000"
+//@output osc_out OSC "192.168.44.44:8000"
+@input midi_in MIDI "BCF2000"
+
+@init
+
+
+@oscmsg
+//printf("got osc: %s\n", oscstr);
+
+
+@midimsg 
+printf("%d, %d, %d\n", msg1, msg2, msg3);
+
+msg1 == 0xB0? (
+	osc_fader_number = midi_channel_to_fader_num[msg2] * 10 + 4203;
+	oscsend(osc_out, "i/Mx/fader/%d", msg3, osc_fader_number);
+);
