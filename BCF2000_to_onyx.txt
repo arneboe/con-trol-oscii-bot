@@ -1,18 +1,91 @@
-//@input osc_in OSC "192.168.44.44:9000"
-//@output osc_out OSC "192.168.44.44:8000"
+@input osc_in OSC "192.168.44.44:9000"
+@output osc_out OSC "192.168.44.44:8000"
 @input midi_in MIDI "BCF2000"
+@output midi_out MIDI "BCF2000"
 
 @init
+fader_midi_control_numbers = 1024;
+flash_button_midi_control_numbers = 4000;
 
 
+/////////////////////////////
+//////BEGIN CONFIGURATION////
+/////////////////////////////
+
+//set midi control numbers of the faders
+//Faders need to be in CC Mode and send values in the range [0..127]
+//Example: If Fader 1 sends CC messages using control number 42, you would set the following:
+//         fader_midi_control_numbers[0] = 42;
+//         Note that the array index is zero-based. Our faders have numbers [1..8] while our array indices have numbers [0..7].
+fader_midi_control_numbers[0] = 1;
+fader_midi_control_numbers[1] = 2;
+fader_midi_control_numbers[2] = 3;
+fader_midi_control_numbers[3] = 4;
+fader_midi_control_numbers[4] = 5;
+fader_midi_control_numbers[5] = 6;
+fader_midi_control_numbers[6] = 7;
+fader_midi_control_numbers[7] = 8;
+
+flash_flash_button_midi_control_numbers[0] = 9;
+flash_button_midi_control_numbers[1] = 10;
+flash_button_midi_control_numbers[2] = 11;
+flash_button_midi_control_numbers[3] = 12;
+flash_button_midi_control_numbers[4] = 13;
+flash_button_midi_control_numbers[5] = 14;
+flash_button_midi_control_numbers[6] = 15;
+flash_button_midi_control_numbers[7] = 16;
+
+
+/////////////////////////////
+//////END CONFIGURATION//////
+/////////////////////////////
+
+midi_channel_to_fader_num = 2000;
+midi_channel_to_flash_button_num = 5000;
+i = 0;
+while(
+	midi_channel_to_fader_num[fader_midi_control_numbers[i]] = i;
+	midi_channel_to_flash_button_num[flash_button_midi_control_numbers[i]] = i;
+	i = i + 1;
+	i < 8;
+   );
+
+   
 @oscmsg
-//printf("got osc: %s\n", oscstr);
 
+match("/Mx/fader/%i", oscstr) ? 
+(
+	fader_num = (fmt0 - 4203) / 10;
+	midi_chan = fader_midi_control_numbers[fader_num];
+	//176, 2, 0
+	msg1=176;
+	msg2=midi_chan;
+	msg3=oscparm(0);
+	midisend(midi_out);
+)
 
 @midimsg 
 printf("%d, %d, %d\n", msg1, msg2, msg3);
 
+
+//Faders 
 msg1 == 0xB0? (
 	osc_fader_number = midi_channel_to_fader_num[msg2] * 10 + 4203;
+	printf("fader: %d\n", osc_fader_number);
 	oscsend(osc_out, "i/Mx/fader/%d", msg3, osc_fader_number);
 );
+
+//Buttons
+//flash buttons (on ch 2)
+msg1 == 0xB1? (
+	osc_button_number = midi_channel_to_flash_button_num[msg2] * 10 + 4205;
+	msg3 == 127 ? (
+		oscsend(osc_out, "i/Mx/button/%d", 1, osc_button_number);
+	) : (
+		oscsend(osc_out, "i/Mx/button/%d", 0, osc_button_number);
+	)
+);
+
+
+
+
