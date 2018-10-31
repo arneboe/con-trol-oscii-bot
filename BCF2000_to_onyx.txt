@@ -50,10 +50,17 @@ while(
 	i < 8;
    );
 
-   
+
+//mapf from arduino (https://gist.github.com/nadavmatalon/71ccaf154bc4bd71f811289e78c65918#file-mapf-ino-L2)
+ function mapf(val in_min in_max out_min out_max)
+ (
+ 	(val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+ );
+
+
 @oscmsg
 
-match("/Mx/fader/%i", oscstr) ? 
+match("/Mx/fader/%i", oscstr) ?
 (
 	fader_num = (fmt0 - 4203) / 10;
 	midi_chan = fader_midi_control_numbers[fader_num];
@@ -64,28 +71,26 @@ match("/Mx/fader/%i", oscstr) ?
 	midisend(midi_out);
 )
 
-@midimsg 
+@midimsg
 printf("%d, %d, %d\n", msg1, msg2, msg3);
 
 
-//Faders 
+//Faders
 msg1 == 0xB0? (
 	osc_fader_number = midi_channel_to_fader_num[msg2] * 10 + 4203;
-	printf("fader: %d\n", osc_fader_number);
-	oscsend(osc_out, "i/Mx/fader/%d", msg3, osc_fader_number);
+	fader_value = mapf(msg3, 0, 127, 0, 255);
+//	printf("fader: %d\n", osc_fader_number);
+	oscsend(osc_out, "i/Mx/fader/%d", fader_value, osc_fader_number);
 );
 
 //Buttons
 //flash buttons (on ch 2)
 msg1 == 0xB1? (
 	osc_button_number = midi_channel_to_flash_button_num[msg2] * 10 + 4205;
+//	printf("msg2: %d\n", msg2);
 	msg3 == 127 ? (
 		oscsend(osc_out, "i/Mx/button/%d", 1, osc_button_number);
 	) : (
 		oscsend(osc_out, "i/Mx/button/%d", 0, osc_button_number);
 	)
 );
-
-
-
-
