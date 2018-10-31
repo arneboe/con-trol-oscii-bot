@@ -45,6 +45,9 @@ down_button_midi_control_numbers[5] = 22;
 down_button_midi_control_numbers[6] = 23;
 down_button_midi_control_numbers[7] = 24;
 
+next_button_midi_control_number = 25;
+prev_button_midi_control_number = 26;
+
 
 /////////////////////////////
 //////END CONFIGURATION//////
@@ -114,4 +117,23 @@ msg1 == 0xB2? (
 	) : (
 		oscsend(osc_out, "i/Mx/button/%d", 0, osc_button_number);
 	)
+);
+
+//bank select (on ch 4)
+msg1 == 0xB3? (
+	msg2 == prev_button_midi_control_number ? (
+	msg3 == 127 ? (
+			oscsend(osc_out, "i/Mx/scroll/4110/down", 1);
+		) : (
+			oscsend(osc_out, "i/Mx/scroll/4110/down", 0);
+		)
+	);
+
+	msg2 == next_button_midi_control_number ? (
+	msg3 == 127 ? (
+			oscsend(osc_out, "i/Mx/scroll/4110/up", 1);
+		) : (
+			oscsend(osc_out, "i/Mx/scroll/4110/up", 0);
+		)
+	);
 );
