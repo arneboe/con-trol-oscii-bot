@@ -5,7 +5,8 @@
 
 @init
 fader_midi_control_numbers = 1024;
-flash_button_midi_control_numbers = 4000;
+downdown_button_midi_control_numbers = 4000;
+down_button_midi_control_numbers = 6000;
 
 
 /////////////////////////////
@@ -26,14 +27,23 @@ fader_midi_control_numbers[5] = 6;
 fader_midi_control_numbers[6] = 7;
 fader_midi_control_numbers[7] = 8;
 
-flash_flash_button_midi_control_numbers[0] = 9;
-flash_button_midi_control_numbers[1] = 10;
-flash_button_midi_control_numbers[2] = 11;
-flash_button_midi_control_numbers[3] = 12;
-flash_button_midi_control_numbers[4] = 13;
-flash_button_midi_control_numbers[5] = 14;
-flash_button_midi_control_numbers[6] = 15;
-flash_button_midi_control_numbers[7] = 16;
+downdown_button_midi_control_numbers[0] = 9;
+downdown_button_midi_control_numbers[1] = 10;
+downdown_button_midi_control_numbers[2] = 11;
+downdown_button_midi_control_numbers[3] = 12;
+downdown_button_midi_control_numbers[4] = 13;
+downdown_button_midi_control_numbers[5] = 14;
+downdown_button_midi_control_numbers[6] = 15;
+downdown_button_midi_control_numbers[7] = 16;
+
+down_button_midi_control_numbers[0] = 17;
+down_button_midi_control_numbers[1] = 18;
+down_button_midi_control_numbers[2] = 19;
+down_button_midi_control_numbers[3] = 20;
+down_button_midi_control_numbers[4] = 21;
+down_button_midi_control_numbers[5] = 22;
+down_button_midi_control_numbers[6] = 23;
+down_button_midi_control_numbers[7] = 24;
 
 
 /////////////////////////////
@@ -41,11 +51,13 @@ flash_button_midi_control_numbers[7] = 16;
 /////////////////////////////
 
 midi_channel_to_fader_num = 2000;
-midi_channel_to_flash_button_num = 5000;
+midi_channel_to_downdown_button_num = 5000;
+midi_channel_to_down_button_num = 7000;
 i = 0;
 while(
 	midi_channel_to_fader_num[fader_midi_control_numbers[i]] = i;
-	midi_channel_to_flash_button_num[flash_button_midi_control_numbers[i]] = i;
+	midi_channel_to_downdown_button_num[downdown_button_midi_control_numbers[i]] = i;
+	midi_channel_to_down_button_num[down_button_midi_control_numbers[i]] = i;
 	i = i + 1;
 	i < 8;
    );
@@ -84,10 +96,19 @@ msg1 == 0xB0? (
 );
 
 //Buttons
-//flash buttons (on ch 2)
+//down down buttons (on ch 2)
 msg1 == 0xB1? (
-	osc_button_number = midi_channel_to_flash_button_num[msg2] * 10 + 4205;
-//	printf("msg2: %d\n", msg2);
+	osc_button_number = midi_channel_to_downdown_button_num[msg2] * 10 + 4205;
+	msg3 == 127 ? (
+		oscsend(osc_out, "i/Mx/button/%d", 1, osc_button_number);
+	) : (
+		oscsend(osc_out, "i/Mx/button/%d", 0, osc_button_number);
+	)
+);
+
+//down buttons (on ch 3)
+msg1 == 0xB2? (
+	osc_button_number = midi_channel_to_down_button_num[msg2] * 10 + 4204;
 	msg3 == 127 ? (
 		oscsend(osc_out, "i/Mx/button/%d", 1, osc_button_number);
 	) : (
