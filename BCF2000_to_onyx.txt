@@ -96,7 +96,7 @@ match("/Mx/fader/%i", oscstr) ?
 	//176, 2, 0
 	msg1=176;
 	msg2=midi_chan;
-	msg3=oscparm(0);
+	msg3=mapf(oscparm(0), 0, 255, 0, 127);
 	midisend(midi_out);
 )
 
