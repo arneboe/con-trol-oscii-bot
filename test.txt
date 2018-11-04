@@ -1,0 +1,16 @@
+@input osc_in OSC "192.168.44.44:9000"
+@output osc_out OSC "192.168.44.44:8000"
+
+@init
+i = 0;
+
+@timer
+	i >= 255? (
+		i = 0;
+	) : (
+	i = i + 1;
+	oscsend(osc_out, "i/Mx/fader/4203", i);
+	)
+
+@oscmsg
+printf("got osc: %s\n", oscstr);
