@@ -1,0 +1,39 @@
+@input osc_in OSC "192.168.44.44:9000"
+@output osc_out OSC "192.168.44.44:8000" 1024 0
+@input midi_in MIDI "BCF2000"
+@output midi_out MIDI "BCF2000"
+
+@init
+
+@midimsg
+printf("%d, %d, %d\n", msg1, msg2, msg3);
+midi_command = msg1 & 0xF0;
+
+printf("midi cmd: %d\n", midi_command);
+
+//CC message
+midi_command == 0xB0? (
+	//the midi channel is used as page number, thus we can use the first 16 pages of playbacks
+	midi_channel = msg1 & 0x0F;
+	page_number = midi_channel + 1; //cause midi channels are zero based
+	
+	//the midi control number is used as playback number
+	//note: in osc the playback numbers start at zero
+	playback_number = msg2;
+	
+	printf("playback: %d\n", playback_number);
+		
+	// There are several different strings that can be used depending on what you want to do to the playback
+	// go      - "i/Mx/playback/page%d/%d/go"
+	// release - "i/Mx/playback/page%d/%d/release"
+	// toggle - "i/Mx/playback/page%d/%d/toggle"   //this seems to behave like flash?
+	
+	msg3 == 127 ? (
+		printf("on\n");
+		oscsend(osc_out, "i/Mx/playback/page%d/%d/go", 1, page_number, playback_number);
+	) 
+	: (
+	printf("off\n");
+		oscsend(osc_out, "i/Mx/playback/page%d/%d/go", 0, page_number, playback_number);
+	)
+)
