@@ -81,9 +81,15 @@ while(
 
 
 //mapf from arduino (https://gist.github.com/nadavmatalon/71ccaf154bc4bd71f811289e78c65918#file-mapf-ino-L2)
+//corrected by https://forum.arduino.cc/index.php?topic=280819.0
+//and with 100% correction
  function mapf(val in_min in_max out_min out_max)
  (
- 	(val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	val == 127 ? (
+		255;
+	):(
+	(val - in_min) * (out_max - out_min + 1) / (in_max - in_min + 1) + out_min;
+	);
  );
 
 
