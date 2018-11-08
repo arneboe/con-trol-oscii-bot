@@ -81,9 +81,10 @@ while(
 
 
 //mapf from arduino (https://gist.github.com/nadavmatalon/71ccaf154bc4bd71f811289e78c65918#file-mapf-ino-L2)
+//corrected by https://forum.arduino.cc/index.php?topic=280819.0
  function mapf(val in_min in_max out_min out_max)
  (
- 	(val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	(val - in_min) * (out_max - out_min + 1) / (in_max - in_min + 1) + out_min;
  );
 
 
@@ -97,6 +98,7 @@ match("/Mx/fader/%i", oscstr) ?
 	msg1=176;
 	msg2=midi_chan;
 	msg3=mapf(oscparm(0), 0, 255, 0, 127);
+	//printf("%d\n", msg3);
 	midisend(midi_out);
 )
 
@@ -107,7 +109,8 @@ match("/Mx/fader/%i", oscstr) ?
 //Faders
 msg1 == 0xB0? (
 	osc_fader_number = midi_channel_to_fader_num[msg2] * 10 + 4203;
-	fader_value = mapf(msg3, 0, 127, 0, 255);
+	fader_value = mapf(msg3, 0, 127, 0, 257);
+	//printf("%d\n", fader_value);
 	oscsend(osc_out, "i/Mx/fader/%d", fader_value, osc_fader_number);
 );
 
