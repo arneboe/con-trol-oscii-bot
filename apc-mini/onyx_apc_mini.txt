@@ -1,0 +1,150 @@
+@input osc_in OSC "192.168.44.44:9000"
+@output osc_out OSC "192.168.44.44:8000" 1024 0
+@input midi_in MIDI "APC MINI"
+@output midi_out MIDI "APC MINI"
+
+@init
+//see https://files.obsidiancontrol.com/s/yndNn7FsaB9Fyay for the osc mapping of onyx
+
+
+buttons = 0;
+faders = 200;
+
+//maps from midi fader to osc channel. The index is the midi channel
+faders[48] = "i/Mx/fader/4603"; 
+faders[49] = "i/Mx/fader/4613"; 
+faders[50] = "i/Mx/fader/4623"; 
+faders[51] = "i/Mx/fader/4633"; 
+faders[52] = "i/Mx/fader/4643"; 
+faders[53] = "i/Mx/fader/4653"; 
+faders[54] = "i/Mx/fader/4663"; 
+faders[55] = "i/Mx/fader/4673"; 
+faders[56] = "i/Mx/fader/4683"; 
+
+//button mapping
+
+
+buttons[0] = "i/Mx/playback/page1/56/toggle";
+buttons[1] = "i/Mx/playback/page1/57/toggle";
+buttons[2] = "i/Mx/playback/page1/58/toggle";
+buttons[3] = "i/Mx/playback/page1/59/toggle";
+buttons[4] = "i/Mx/playback/page1/60/toggle";
+buttons[5] = "i/Mx/playback/page1/61/toggle";
+buttons[6] = "i/Mx/playback/page1/62/toggle";
+buttons[7] = "i/Mx/playback/page1/63/toggle";
+buttons[8] = "i/Mx/playback/page1/48/toggle";
+buttons[9] = "i/Mx/playback/page1/49/toggle";
+buttons[10] = "i/Mx/playback/page1/50/toggle";
+buttons[11] = "i/Mx/playback/page1/51/toggle";
+buttons[12] = "i/Mx/playback/page1/52/toggle";
+buttons[13] = "i/Mx/playback/page1/53/toggle";
+buttons[14] = "i/Mx/playback/page1/54/toggle";
+buttons[15] = "i/Mx/playback/page1/55/toggle";
+buttons[16] = "i/Mx/playback/page1/40/toggle";
+buttons[17] = "i/Mx/playback/page1/41/toggle";
+buttons[18] = "i/Mx/playback/page1/42/toggle";
+buttons[19] = "i/Mx/playback/page1/43/toggle";
+buttons[20] = "i/Mx/playback/page1/44/toggle";
+buttons[21] = "i/Mx/playback/page1/45/toggle";
+buttons[22] = "i/Mx/playback/page1/46/toggle";
+buttons[23] = "i/Mx/playback/page1/47/toggle";
+buttons[24] = "i/Mx/playback/page1/32/toggle";
+buttons[25] = "i/Mx/playback/page1/33/toggle";
+buttons[26] = "i/Mx/playback/page1/34/toggle";
+buttons[27] = "i/Mx/playback/page1/35/toggle";
+buttons[28] = "i/Mx/playback/page1/36/toggle";
+buttons[29] = "i/Mx/playback/page1/37/toggle";
+buttons[30] = "i/Mx/playback/page1/38/toggle";
+buttons[31] = "i/Mx/playback/page1/39/toggle";
+buttons[32] = "i/Mx/playback/page1/24/toggle";
+buttons[33] = "i/Mx/playback/page1/25/toggle";
+buttons[34] = "i/Mx/playback/page1/26/toggle";
+buttons[35] = "i/Mx/playback/page1/27/toggle";
+buttons[36] = "i/Mx/playback/page1/28/toggle";
+buttons[37] = "i/Mx/playback/page1/29/toggle";
+buttons[38] = "i/Mx/playback/page1/30/toggle";
+buttons[39] = "i/Mx/playback/page1/31/toggle";
+buttons[40] = "i/Mx/playback/page1/16/toggle";
+buttons[41] = "i/Mx/playback/page1/17/toggle";
+buttons[42] = "i/Mx/playback/page1/18/toggle";
+buttons[43] = "i/Mx/playback/page1/19/toggle";
+buttons[44] = "i/Mx/playback/page1/20/toggle";
+buttons[45] = "i/Mx/playback/page1/21/toggle";
+buttons[46] = "i/Mx/playback/page1/22/toggle";
+buttons[47] = "i/Mx/playback/page1/23/toggle";
+buttons[48] = "i/Mx/playback/page1/8/toggle";
+buttons[49] = "i/Mx/playback/page1/9/toggle";
+buttons[50] = "i/Mx/playback/page1/10/toggle";
+buttons[51] = "i/Mx/playback/page1/11/toggle";
+buttons[52] = "i/Mx/playback/page1/12/toggle";
+buttons[53] = "i/Mx/playback/page1/13/toggle";
+buttons[54] = "i/Mx/playback/page1/14/toggle";
+buttons[55] = "i/Mx/playback/page1/15/toggle";
+buttons[56] = "i/Mx/playback/page1/0/toggle";
+buttons[57] = "i/Mx/playback/page1/1/toggle";
+buttons[58] = "i/Mx/playback/page1/2/toggle";
+buttons[59] = "i/Mx/playback/page1/3/toggle";
+buttons[60] = "i/Mx/playback/page1/4/toggle";
+buttons[61] = "i/Mx/playback/page1/5/toggle";
+buttons[62] = "i/Mx/playback/page1/6/toggle";
+buttons[63] = "i/Mx/playback/page1/7/toggle";
+buttons[64] = "i/Mx/button/4605";
+buttons[65] = "i/Mx/button/4615";
+buttons[66] = "i/Mx/button/4625";
+buttons[67] = "i/Mx/button/4635";
+buttons[68] = "i/Mx/button/4645";
+buttons[69] = "i/Mx/button/4655";
+buttons[70] = "i/Mx/button/4665";
+buttons[71] = "i/Mx/button/4675";
+buttons[82] = "UNUSED";
+buttons[83] = "UNUSED";
+buttons[84] = "UNUSED";
+buttons[85] = "UNUSED";
+buttons[86] = "UNUSED";
+buttons[87] = "UNUSED";
+buttons[88] = "UNUSED";
+buttons[89] = "UNUSED";
+buttons[98] = "i/Mx/button/4685";
+
+printf("Initialized onyx apc mini mapping");
+
+
+
+function midi_to_dmx(midi_val)
+(
+	//this is shorthand for: map(midi_val, 0, 127, 0, 257);
+	//Need t o use 257 as upper limit to get the 127 -> 255 mapping
+	midi_val * 258 / 128;
+);
+
+
+@midimsg
+//printf("%d, %d, %d\n", msg1, msg2, msg3);
+
+
+msg1 == 144? //Note ON
+(
+	//printf("Button Down: %d, %d, %s\n",  msg2, msg3, buttons[msg2]);
+	oscsend(osc_out, buttons[msg2], 1);
+
+	//just send msg1/msg2/msg3 back to the controller. This will turn the led on
+	midisend(midi_out);
+
+);
+
+msg1 == 128?  //Note OFF
+(
+	//printf("Button Up: %d, %d, %s\n",  msg2, msg3, buttons[msg2]);
+	oscsend(osc_out, buttons[msg2], 0);
+
+	//turn led back off
+	msg1 = 144;
+	msg3 = 0;
+	midisend(midi_out);
+);
+
+msg1 == 176?  //Fader changed
+(
+	//printf("Fader: %d, %d, %s\n",  msg2, msg3, faders[msg2]);
+	oscsend(osc_out, faders[msg2], midi_to_dmx(msg3));
+);
